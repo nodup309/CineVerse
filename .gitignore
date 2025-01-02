@@ -1,0 +1,4 @@
+echo "/app/vendor" >> .gitignore
+echo "/app/node_modules" >> .gitignore
+echo "/db_data" >> .gitignore
+echo "/.env" >> .gitignore

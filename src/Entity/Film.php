@@ -40,10 +40,17 @@ class Film
     #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'film')]
     private Collection $roles;
 
+    /**
+     * @var Collection<int, Visionnage>
+     */
+    #[ORM\OneToMany(targetEntity: Visionnage::class, mappedBy: 'film')]
+    private Collection $visionnages;
+
     public function __construct()
     {
         $this->genre = new ArrayCollection();
         $this->roles = new ArrayCollection();
+        $this->visionnages = new ArrayCollection();
     }
 
     public function getId(): int
@@ -145,6 +152,36 @@ class Film
     {
         if ($this->roles->removeElement($role)) {
             $role->removeFilm($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Visionnage>
+     */
+    public function getVisionnages(): Collection
+    {
+        return $this->visionnages;
+    }
+
+    public function addVisionnage(Visionnage $visionnage): static
+    {
+        if (!$this->visionnages->contains($visionnage)) {
+            $this->visionnages->add($visionnage);
+            $visionnage->setFilm($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVisionnage(Visionnage $visionnage): static
+    {
+        if ($this->visionnages->removeElement($visionnage)) {
+            // set the owning side to null (unless already changed)
+            if ($visionnage->getFilm() === $this) {
+                $visionnage->setFilm(null);
+            }
         }
 
         return $this;
